@@ -1,6 +1,4 @@
-Here's a polished `README.md` file for your GitHub repository based on the provided project setup using PostgreSQL on Docker:
 
----
 
 ```markdown
 # 🐘 Express + PostgreSQL (Docker) User API
@@ -125,6 +123,6 @@ PRs and suggestions welcome! Make sure to open an issue first to discuss major c
 [MIT](LICENSE)
 ```
 
----
+
 
 Let me know if you'd like to include `docker-compose`, Swagger docs, or instructions for deployment!
