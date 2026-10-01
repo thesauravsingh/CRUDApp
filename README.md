@@ -1,16 +1,13 @@
+# 🐘 Express + PostgreSQL User API
 
-
-```markdown
-# 🐘 Express + PostgreSQL (Docker) User API
-
-This project is a simple RESTful API built with **Express.js** and **PostgreSQL**, containerized using **Docker**. It provides CRUD functionality for user management.
+This project is a simple RESTful API built with **Express.js** and **PostgreSQL**. It provides CRUD functionality for user management.
 
 ## 🧱 Features
 
 - Create, Read, Update, and Delete (CRUD) users
 - Input validation using Joi
 - Centralized error handling middleware
-- PostgreSQL integration with Docker
+- PostgreSQL integration (local install or Docker)
 - Environment-based configuration
 
 ---
@@ -20,28 +17,33 @@ This project is a simple RESTful API built with **Express.js** and **PostgreSQL*
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/thesauravsingh/CRUDApp.git
+cd CRUDApp
 ```
 
 ### 2. Set up environment variables
 
-Create a `.env` file in the `config` or root directory:
+Copy the template and fill in your password (`.env` is ignored by git):
+
+```bash
+cp .env.example .env
+```
 
 ```dotenv
+PORT=3001
 DB_USER=postgres
 DB_PASSWORD=yourpassword
 DB_HOST=localhost
 DB_PORT=5432
-DB_DATABASE=userdb
+DB_DATABASE=express-crud
 ```
 
-### 3. Run PostgreSQL with Docker
+### 3. Run PostgreSQL
 
-Make sure Docker is installed, then run:
+Either use a local install (for example `brew install postgresql@18`, then `createdb express-crud`), or Docker:
 
 ```bash
-docker run --name user-db -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=userdb -p 5432:5432 -d postgres
+docker run --name user-db -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=express-crud -p 5432:5432 -d postgres
 ```
 
 ### 4. Install dependencies
@@ -50,43 +52,41 @@ docker run --name user-db -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=userd
 npm install
 ```
 
-### 5. Create the users table
-
-Run this script once to initialize the DB table:
-
-```bash
-node scripts/createUserTable.js
-```
-
-### 6. Start the server
+### 5. Start the server
 
 ```bash
 npm run dev
 ```
 
+The `users` table is created automatically on startup (`src/data/createUserTable.js`).
+
 ---
 
 ## 📬 API Endpoints
 
-| Method | Endpoint        | Description          |
-|--------|------------------|----------------------|
-| GET    | `/user`          | Get all users        |
-| GET    | `/user/:id`      | Get user by ID       |
-| POST   | `/user`          | Create a new user    |
-| PUT    | `/user/:id`      | Update user by ID    |
-| DELETE | `/user/:id`      | Delete user by ID    |
+| Method | Endpoint            | Description          |
+|--------|---------------------|----------------------|
+| GET    | `/api/user`         | Get all users        |
+| GET    | `/api/user/:id`     | Get user by ID       |
+| POST   | `/api/user`         | Create a new user    |
+| PUT    | `/api/user/:id`     | Update user by ID    |
+| DELETE | `/api/user/:id`     | Delete user by ID    |
 
-All user inputs are validated using Joi for schema consistency.
+Request body for POST and PUT: `{"name": "...", "email": "..."}`. All user inputs are validated using Joi for schema consistency.
 
 ---
 
 ## 🧪 Project Structure
 
 ```
+src/
 ├── config/
-│   └── db.js                 # PostgreSQL connection setup
+│   └── db.js                 # PostgreSQL connection pool
 ├── controllers/
-│   └── userController.js     # Request handling logic (not included in uploads)
+│   └── userController.js     # Request handling logic
+├── data/
+│   ├── createUserTable.js    # Creates the users table on startup
+│   └── data.sql              # Table definition
 ├── middlewares/
 │   ├── errorHandler.js       # Centralized error handler
 │   └── inputValidator.js     # Input validation middleware
@@ -94,20 +94,7 @@ All user inputs are validated using Joi for schema consistency.
 │   └── userModel.js          # DB query logic
 ├── routes/
 │   └── userRoutes.js         # Express route definitions
-├── scripts/
-│   └── createUserTable.js    # User table creation
-├── data.sql                  # Sample data insert (if applicable)
-└── server.js                 # Entry point for API server (assumed)
-```
-
----
-
-## 📦 Sample SQL Script
-
-If you want to preload data, run:
-
-```bash
-psql -h localhost -U postgres -d userdb -f data.sql
+└── index.js                  # Entry point for the API server
 ```
 
 ---
@@ -115,14 +102,3 @@ psql -h localhost -U postgres -d userdb -f data.sql
 ## 🙌 Contributing
 
 PRs and suggestions welcome! Make sure to open an issue first to discuss major changes.
-
----
-
-## 📄 License
-
-[MIT](LICENSE)
-```
-
-
-
-Let me know if you'd like to include `docker-compose`, Swagger docs, or instructions for deployment!
